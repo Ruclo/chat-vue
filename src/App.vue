@@ -1,47 +1,28 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import AuthComponent from './components/AuthComponent.vue'
+import LoadingComponent from './components/LoadingComponent.vue'
+import MainComponent from './components/MainComponent.vue'
+import { ref, computed, onMounted } from 'vue'
+import { useAuthStore } from './stores/AuthStore'
+
+const authStore = useAuthStore()
+
+const isLoading = ref(true)
+
+const currentComponent = computed(() => {
+  if (isLoading.value) return LoadingComponent
+  if (!authStore.isAuthenticated) return AuthComponent
+  return MainComponent
+})
+
+onMounted(async () => {
+  await authStore.refreshTokens()
+  isLoading.value = false
+})
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <component :is="currentComponent"></component>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style>
+<style></style>
