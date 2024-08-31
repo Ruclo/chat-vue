@@ -1,0 +1,14 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+	<title>logout</title>
+	<style>
+		tspan { white-space:pre } 
+		.t0 { font-size: 150px;fill: #ffffff;font-weight: 400;font-family: "DejaVuSans", "DejaVu Sans" } 
+		.s1 { fill: #ffffff } 
+	</style>
+	<text id="+" style="transform: matrix(1,0,0,1,370,303)" >
+		<tspan x="0" y="0" class="t0">+
+</tspan>
+	</text>
+	<path id="Layer 1" class="s1" d="m255.7 255.5c-50.7 0-91.7-41-91.7-91.7 0-50.8 41-91.8 91.7-91.8 50.8 0 91.8 41 91.8 91.8 0 50.7-41 91.7-91.8 91.7z"/>
+	<path id="Shape 1" class="s1" d="m255.5 743c-118.6 0-214.5-103.5-214.5-231.5 0-128 95.9-231.5 214.5-231.5 118.6 0 214.5 103.5 214.5 231.5 0 128-95.9 231.5-214.5 231.5z"/>
+</svg>
