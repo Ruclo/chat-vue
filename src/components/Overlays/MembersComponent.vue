@@ -2,9 +2,10 @@
 import { useSessionStore } from '@/stores/SessionStore'
 import { reactive, onMounted, ref } from 'vue'
 import GeneralOverlay from './GeneralOverlay.vue'
-import BorderButton from './BorderButton.vue'
-import LoadMoreSentinel from './LoadMoreSentinel.vue'
-import SpinnerComponent from './SpinnerComponent.vue'
+import BorderButton from '../Common/Buttons/BorderButton.vue'
+import LoadMoreSentinel from '../Common/LoadMoreSentinel.vue'
+import SpinnerComponent from '../Common/SpinnerComponent.vue'
+import apiClient from '@/api/apiClient'
 
 const emit = defineEmits(['close'])
 const members = reactive([])
@@ -22,17 +23,10 @@ const fetchMembers = async () => {
 
   currentPage += 1
 
-  const url =
-    'https://127.0.0.1:8443/sessions/' +
-    sessionStore.getOpenChat.sessionId +
-    '/members?' +
-    params.toString()
-  const opts = {
-    method: 'GET',
-    credentials: 'include'
-  }
+  const endpoint =
+    '/sessions/' + sessionStore.getOpenChat.sessionId + '/members?' + params.toString()
 
-  const response = await fetch(url, opts)
+  const response = await apiClient.get(endpoint)
 
   if (response.ok) {
     let data = await response.json()
@@ -52,7 +46,7 @@ onMounted(async () => {
 <template>
   <GeneralOverlay width="300px" height="60%">
     <SpinnerComponent v-if="loading" />
-    <div v-else style="display: flex; flex-direction: column; height: 100%">
+    <div v-else style="display: flex; flex-direction: column; height: 100%; width: 100%">
       <div class="buttons">
         <div class="members-label">Members</div>
         <BorderButton style="margin-left: auto" @click="emit('close')">X</BorderButton>

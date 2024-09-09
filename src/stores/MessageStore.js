@@ -1,8 +1,10 @@
 import { defineStore } from 'pinia'
+import apiClient from '@/api/apiClient'
 
 export const useMessageStore = defineStore('message', {
   state: () => ({
     messages: {},
+    messageIdsSet: new Set(),
     moreMessagesExistMap: new Map(),
     pendingMessages: []
   }),
@@ -25,31 +27,45 @@ export const useMessageStore = defineStore('message', {
       this.pendingMessages.push(messageObj)
     },
 
-    getFirstPendingMessage() {
-      return this.pendingMessages.shift()
+    updateSentMessage(updatedMessage) {
+      let message = this.pendingMessages.shift()
+      message.Id = updatedMessage.Id
+      message.timestamp = updatedMessage.timestamp
+      this.messageIdsSet.add(message.Id)
     },
 
     addMessage(messageObj) {
-      console.log(messageObj)
+      const messageId = messageObj.Id
+      console.log('id', messageId)
+
+      if (messageId != null && this.messageIdsSet.has(messageId)) {
+        return
+      }
+
+      this.messageIdsSet.add(messageId)
       const sessionId = messageObj.sessionId
-      delete messageObj.sessionId
 
       let messagesArr = this.messages[sessionId]
 
-      if (messagesArr == undefined || messagesArr.length == 0) {
+      if (messagesArr == undefined) {
         this.messages[sessionId] = [messageObj]
         return
       }
 
-      let last = messagesArr[messagesArr.length - 1]
-
-      if (messageObj.id == null || last.id < messageObj.id) {
-        messagesArr.push(messageObj)
-      }
-      console.log(this.messages[sessionId])
+      messagesArr.push(messageObj)
     },
 
     prependMessages(messagesArray, sessionId) {
+      while (messagesArray.length > 0) {
+        let latestMessage = messagesArray[messagesArray.length - 1]
+        if (!this.messageIdsSet.has(latestMessage.Id)) {
+          break
+        }
+        messagesArray.pop()
+      }
+      messagesArray.forEach((message) => {
+        this.messageIdsSet.add(message.Id)
+      })
       this.messages[sessionId] = [...messagesArray, ...(this.messages[sessionId] || [])]
     },
 
@@ -61,21 +77,15 @@ export const useMessageStore = defineStore('message', {
       })
 
       const queryStr = params.toString()
-      console.log('z fetch: ', sessionId)
-      const response = await fetch(
-        `https://127.0.0.1:8443/messages/session/${sessionId}?${queryStr}`,
-        {
-          method: 'GET',
-          credentials: 'include'
-        }
-      )
+      const endpoint = `/messages/session/${sessionId}?${queryStr}`
+
+      const response = await apiClient.get(endpoint)
       let messagesArr = await response.json()
 
       if (messagesArr.length < count) {
         this.moreMessagesExistMap.set(sessionId, false)
       }
       this.prependMessages(messagesArr, sessionId)
-      return messagesArr
     }
   }
 })

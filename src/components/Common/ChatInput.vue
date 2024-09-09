@@ -44,28 +44,7 @@ async function handleSendMessage() {
       ></textarea>
     </div>
     <button id="chat-button" @click="handleSendMessage">
-      <svg
-        width="32"
-        height="32"
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path d="M2.01 21L23 12L2.01 3L2 10L17 12L2 14L2.01 21Z" fill="url(#send-gradient)" />
-        <defs>
-          <linearGradient
-            id="send-gradient"
-            x1="0"
-            y1="12"
-            x2="23"
-            y2="12"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop offset="0%" stop-color="rgb(0, 65, 255)" />
-            <stop offset="86%" stop-color="rgb(127, 255, 212)" />
-          </linearGradient>
-        </defs>
-      </svg>
+      <img src="../../assets/send.svg" />
     </button>
   </div>
 </template>
@@ -95,8 +74,6 @@ async function handleSendMessage() {
 #chat-button {
   margin: 1em;
   margin-left: 0;
-  padding: 0.5em;
-  border-radius: 1em;
   background: none;
   border: none;
   cursor: pointer;

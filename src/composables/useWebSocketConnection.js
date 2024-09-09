@@ -1,4 +1,4 @@
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, watch } from 'vue'
 import { useMessageStore } from '@/stores/MessageStore'
 import { useSessionStore } from '@/stores/SessionStore'
 import { useAuthStore } from '@/stores/AuthStore'
@@ -10,6 +10,11 @@ const MessageTypes = {
   SESSION_NOTIFICATION: 'session_new'
 }
 const stompClient = ref(null)
+
+const refreshIntervalInMinutes = 14
+
+const refreshInterval = refreshIntervalInMinutes * 60000
+let intervalId = null
 
 export function useWebSocketConnection() {
   const messageStore = useMessageStore()
@@ -24,9 +29,7 @@ export function useWebSocketConnection() {
       if (type === MessageTypes.NEW_MESSAGE) {
         const senderUsername = messageJson.payload.sender.username
         if (senderUsername === authStore.getUsername) {
-          let messageObj = messageStore.getFirstPendingMessage()
-          messageObj.id = messageJson.payload.id
-          messageObj.timestamp = messageJson.payload.timestamp
+          messageStore.updateSentMessage(messageJson.payload)
           return
         }
 
@@ -44,13 +47,15 @@ export function useWebSocketConnection() {
       return
     }
 
-    const socket = new SockJS('https://127.0.0.1:8443/ws')
+    const url = import.meta.env.VITE_API_BASE_URL + '/ws'
+    const socket = new SockJS(url)
     stompClient.value = Stomp.over(socket)
 
     stompClient.value.connect(
       {},
       () => {
         stompClient.value.subscribe('/queue/' + authStore.getUsername, handleIncommingMessage)
+        intervalId = setInterval(authStore.refreshTokens, refreshInterval)
       },
       () => {
         console.error('Failed to connect to the ws')
@@ -62,6 +67,9 @@ export function useWebSocketConnection() {
     if (stompClient.value) {
       stompClient.value.disconnect()
       stompClient.value = null
+      if (intervalId != null) {
+        clearInterval(intervalId)
+      }
     }
   }
 
@@ -78,15 +86,23 @@ export function useWebSocketConnection() {
     messageStore.sendMessage(messageObj)
   }
 
-  onMounted(() => {
-    connect()
-  })
-
-  onUnmounted(() => {
-    disconnect()
-  })
+  if (!stompClient.value) {
+    watch(
+      () => authStore.isAuthenticated,
+      (auth) => {
+        if (auth) {
+          connect()
+        } else {
+          disconnect()
+        }
+      },
+      { immediate: true }
+    )
+  }
 
   return {
-    sendMessage
+    sendMessage,
+    connect,
+    disconnect
   }
 }

@@ -1,9 +1,12 @@
 import { defineStore } from 'pinia'
+import apiClient from '@/api/apiClient'
 
 export const useSessionStore = defineStore('session', {
   state: () => ({
     sessions: [],
+    sessionIdsSet: new Set(),
     sessionsPerPage: 10,
+    fetchedAll: false,
     openChat: null
   }),
 
@@ -14,7 +17,11 @@ export const useSessionStore = defineStore('session', {
 
     isChatOpen: (state) => state.openChat != null,
 
-    getOpenChat: (state) => state.openChat
+    getOpenChat: (state) => state.openChat,
+
+    getSessionsPerPage: (state) => state.sessionsPerPage,
+
+    allSessionsFetched: (state) => state.fetchedAll
   },
 
   actions: {
@@ -32,19 +39,29 @@ export const useSessionStore = defineStore('session', {
       this.openChat = session
     },
 
-    initSessions(arrayOfSessions) {
-      this.sessions = arrayOfSessions
-    },
-
     appendSessions(arrayOfSessions) {
+      for (let i = arrayOfSessions.length - 1; i >= 0; i--) {
+        let session = arrayOfSessions[i]
+        if (this.sessionIdsSet.has(session.sessionId)) {
+          arrayOfSessions.splice(i, 1)
+        } else {
+          this.sessionIdsSet.add(session.sessionId)
+        }
+      }
       this.sessions.push(...arrayOfSessions)
     },
 
     prependSession(session) {
+      if (this.sessionIdsSet.has(session.sessionId)) {
+        return
+      }
+
+      this.sessionIdsSet.add(session.sessionId)
       this.sessions = [session, ...this.sessions]
     },
 
     deleteSession(session) {
+      this.sessionIdsSet.delete(session.sessionId)
       this.sessions = this.sessions.filter((s) => s.sessionId !== session.sessionId)
       if (this.getOpenChat.sessionId === session.sessionId) {
         this.handleChatOpen(null)
@@ -52,6 +69,7 @@ export const useSessionStore = defineStore('session', {
     },
 
     insertSession(session) {
+      this.sessionIdsSet.add(session.sessionId)
       let left = 0
       let right = this.sessions.length
 
@@ -69,6 +87,9 @@ export const useSessionStore = defineStore('session', {
     },
 
     async fetchSessions() {
+      if (this.allSessionsFetched) {
+        return
+      }
       let oldest_timestamp = null
 
       if (this.sessions[this.sessions.length - 1]) {
@@ -80,19 +101,14 @@ export const useSessionStore = defineStore('session', {
         ...(oldest_timestamp && { timestamp: oldest_timestamp })
       })
 
-      const response = await fetch('https://127.0.0.1:8443/sessions?' + params.toString(), {
-        method: 'GET',
-        credentials: 'include'
-      })
-
+      const endpoint = '/sessions?' + params.toString()
+      const response = await apiClient.get(endpoint)
       let arr = await response.json()
-
-      if (this.getSessionCount == 0) {
-        this.initSessions(arr)
-      } else {
-        this.appendSessions(arr)
+      if (arr.length < this.sessionsPerPage) {
+        this.fetchedAll = true
       }
-      return arr
+
+      this.appendSessions(arr)
     }
   }
 })

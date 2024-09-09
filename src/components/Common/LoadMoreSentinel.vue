@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, defineEmits, onUnmounted } from 'vue'
+import { ref, watch, onUnmounted } from 'vue'
 import Spinner from './SpinnerComponent.vue'
 const sentinelElement = ref(null)
 

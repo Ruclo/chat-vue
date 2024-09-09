@@ -1,8 +1,9 @@
 <script setup>
 import { useSessionStore } from '@/stores/SessionStore'
-import { ref, defineEmits } from 'vue'
+import { ref } from 'vue'
 import GeneralOverlay from './GeneralOverlay.vue'
-import BorderButton from './BorderButton.vue'
+import BorderButton from '../Common/Buttons/BorderButton.vue'
+import apiClient from '@/api/apiClient'
 
 const sessionStore = useSessionStore()
 
@@ -10,29 +11,17 @@ const emits = defineEmits(['close'])
 
 const inputValue = ref('')
 
-const invalidUser = ref(false)
-
 function closeOverlay() {
   emits('close')
 }
 
-async function handleAddUser() {
-  const url =
-    'https://127.0.0.1:8443/sessions/' +
-    sessionStore.getOpenChat.sessionId +
-    '/user/' +
-    inputValue.value
-  const opts = {
-    method: 'POST',
-    credentials: 'include'
-  }
+async function handleCreateNewSession() {
+  const endpoint = '/sessions/'
 
-  let response = await fetch(url, opts)
-
-  if (!response.ok) {
-    invalidUser.value = true
-  } else {
-    invalidUser.value = false
+  const response = await apiClient.post(endpoint, { name: inputValue.value })
+  if (response.ok) {
+    let session = await response.json()
+    sessionStore.prependSession(session)
     closeOverlay()
   }
 }
@@ -40,17 +29,17 @@ async function handleAddUser() {
 
 <template>
   <GeneralOverlay>
-    <div class="input-label">Add user to {{ sessionStore.getOpenChat.sessionName }}</div>
+    <div class="input-label">Create a new session</div>
     <div class="input-wrap">
       <input
         class="overlay-input"
-        autocomplete="off"
         v-model="inputValue"
-        placeholder="Enter a username"
+        autocomplete="off"
+        placeholder="Enter session name"
       />
     </div>
     <div class="buttons">
-      <BorderButton @click="handleAddUser">Add user</BorderButton>
+      <BorderButton @click="handleCreateNewSession">Create a new session</BorderButton>
       <BorderButton @click="closeOverlay">Close</BorderButton>
     </div>
   </GeneralOverlay>
@@ -58,19 +47,17 @@ async function handleAddUser() {
 
 <style scoped>
 .input-label {
-  margin: 1em 1em 0 1em;
   color: white;
   font-weight: bold;
   text-align: center;
-  text-overflow: ellipsis;
-  max-width: 400px;
-  overflow: hidden;
-  white-space: nowrap;
 }
+
 .input-wrap {
-  margin: 0 1em 1em 1em;
   min-width: 200px;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .overlay-input {
@@ -83,9 +70,29 @@ async function handleAddUser() {
 }
 
 .buttons {
-  margin: 0 1em 1em 1em;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0.5em 0;
+  width: 100%;
+}
+
+@media (max-width: 800px) {
+  .overlay-input {
+    width: 100%;
+    font-size: 1em;
+    height: 1.5em;
+  }
+
+  .input-label {
+    margin: 0;
+  }
+  .input-wrap {
+    margin: 0;
+  }
+
+  .buttons {
+    margin: 0;
+  }
 }
 </style>

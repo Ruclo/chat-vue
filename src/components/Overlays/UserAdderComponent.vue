@@ -1,8 +1,10 @@
 <script setup>
 import { useSessionStore } from '@/stores/SessionStore'
-import { defineEmits, ref } from 'vue'
+import { ref, defineEmits } from 'vue'
 import GeneralOverlay from './GeneralOverlay.vue'
-import BorderButton from './BorderButton.vue'
+import BorderButton from '../Common/Buttons/BorderButton.vue'
+
+import apiClient from '@/api/apiClient'
 
 const sessionStore = useSessionStore()
 
@@ -10,23 +12,21 @@ const emits = defineEmits(['close'])
 
 const inputValue = ref('')
 
+const invalidUser = ref(false)
+
 function closeOverlay() {
   emits('close')
 }
 
-async function handleCreateNewSession() {
-  const url = 'https://127.0.0.1:8443/sessions/'
-  const opts = {
-    method: 'POST',
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name: inputValue.value })
-  }
+async function handleAddUser() {
+  const endpoint = '/sessions/' + sessionStore.getOpenChat.sessionId + '/user/' + inputValue.value
 
-  const response = await fetch(url, opts)
-  if (response.ok) {
-    let session = await response.json()
-    sessionStore.prependSession(session)
+  const response = await apiClient.post(endpoint)
+
+  if (!response.ok) {
+    invalidUser.value = true
+  } else {
+    invalidUser.value = false
     closeOverlay()
   }
 }
@@ -34,17 +34,17 @@ async function handleCreateNewSession() {
 
 <template>
   <GeneralOverlay>
-    <div class="input-label">Session name</div>
+    <div class="input-label">Add user to {{ sessionStore.getOpenChat.sessionName }}</div>
     <div class="input-wrap">
       <input
         class="overlay-input"
-        v-model="inputValue"
         autocomplete="off"
-        placeholder="Enter session name"
+        v-model="inputValue"
+        placeholder="Enter a username"
       />
     </div>
     <div class="buttons">
-      <BorderButton @click="handleCreateNewSession">Create a new session</BorderButton>
+      <BorderButton @click="handleAddUser">Add user</BorderButton>
       <BorderButton @click="closeOverlay">Close</BorderButton>
     </div>
   </GeneralOverlay>
@@ -52,15 +52,20 @@ async function handleCreateNewSession() {
 
 <style scoped>
 .input-label {
-  margin: 1em 1em 0 1em;
   color: white;
   font-weight: bold;
   text-align: center;
+  text-overflow: ellipsis;
+  max-width: 400px;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .input-wrap {
-  margin: 0 1em 1em 1em;
   min-width: 200px;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .overlay-input {
@@ -73,9 +78,10 @@ async function handleCreateNewSession() {
 }
 
 .buttons {
-  margin: 0 1em 1em 1em;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0.5em 0;
+  width: 100%;
 }
 </style>

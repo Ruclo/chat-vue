@@ -2,7 +2,9 @@
 import { ref, computed, watch, nextTick } from 'vue'
 import { useImageCrop } from '@/composables/useImageCrop'
 import GeneralOverlay from './GeneralOverlay.vue'
-import BorderButton from './BorderButton.vue'
+import BorderButton from '../Common/Buttons/BorderButton.vue'
+import apiClient from '@/api/apiClient'
+import { useAuthStore } from '@/stores/AuthStore'
 
 const fileInput = ref(null)
 const imageEl = ref(null)
@@ -10,11 +12,17 @@ const imageContainer = ref(null)
 
 let imageNaturalHeight, imageNaturalWidth
 
+const authStore = useAuthStore()
+
 const image = ref(null)
 const zoom = ref(null)
 
 const minZoom = ref(null)
 const maxZoom = computed(() => (minZoom.value != null ? minZoom.value * 3 : null))
+
+const dropZone = ref(null)
+
+let dropZoneWidth, dropZoneHeight
 
 const zoomStep = computed(() => {
   if (minZoom.value == null || maxZoom.value == null) {
@@ -25,7 +33,7 @@ const zoomStep = computed(() => {
 
 const { cropPosition, startCrop } = useImageCrop(imageContainer, imageEl)
 
-const emit = defineEmits('close')
+const emit = defineEmits(['close'])
 
 const imageStyle = computed(() => ({
   top: `${cropPosition.y}px`,
@@ -35,8 +43,8 @@ const imageStyle = computed(() => ({
 }))
 
 const cropStyle = computed(() => ({
-  width: '300px',
-  height: '300px',
+  width: `${dropZoneWidth}px`,
+  height: `${dropZoneHeight}px`,
   borderRadius: '50%',
   position: 'absolute',
   top: 0,
@@ -59,6 +67,10 @@ const handleFile = async (file) => {
   if (file && file.type.match('image.*')) {
     const reader = new FileReader()
     reader.onload = (e) => {
+      dropZoneWidth = dropZone.value.clientWidth
+      dropZoneHeight = dropZone.value.clientHeight
+      console.log('dzw', dropZoneWidth)
+      console.log('dzh', dropZoneHeight)
       image.value = e.target.result
     }
     reader.readAsDataURL(file)
@@ -135,23 +147,22 @@ const sendToApi = async () => {
     const scale = zoom.value
     const sx = -cropPosition.x / scale
     const sy = -cropPosition.y / scale
-    const sWidth = 300 / scale
-    const sHeight = 300 / scale
+    const sWidth = dropZoneWidth / scale
+    const sHeight = dropZoneHeight / scale
 
     ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, canvasSize, canvasSize)
 
     const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg'))
 
-    const formData = new FormData()
+    let formData = new FormData()
     formData.append('file', blob, 'profile.jpg')
+
+    const endpoint = '/api/users/profilePicture'
+
     try {
-      const response = await fetch('https://127.0.0.1:8443/api/users/profilePicture', {
-        method: 'POST',
-        body: formData,
-        credentials: 'include'
-      })
-      const result = await response.json()
-      console.log('Profile picture updated:', result)
+      const response = await apiClient.post(endpoint, formData)
+      const pfpUrl = await response.text()
+      authStore.user.pfpUrl = pfpUrl
       emit('close')
     } catch (error) {
       console.error('Error updating profile picture:', error)
@@ -173,6 +184,7 @@ const sendToApi = async () => {
         @drop.prevent="onDrop"
         @dragover.prevent
         @click="$refs.fileInput.click()"
+        ref="dropZone"
       >
         <input
           type="file"
@@ -182,10 +194,11 @@ const sendToApi = async () => {
           :disabled="image"
           style="display: none"
         />
-        <p v-if="!image">Drag & Drop or Click to Upload Image</p>
+        <p v-if="!image">Drag & Drop or Click to Upload Profile Picture</p>
         <div v-else class="image-container" ref="imageContainer">
           <img
-            @mousedown="startCrop"
+            @mousedown.prevent="startCrop"
+            @touchstart.prevent="startCrop"
             draggable="false"
             :src="image"
             ref="imageEl"
@@ -212,12 +225,13 @@ const sendToApi = async () => {
   color: white;
   margin: 0 auto;
   text-align: center;
-  padding: 1em;
 }
 
 .drop-zone {
-  width: 300px;
-  height: 300px;
+  aspect-ratio: 1/1;
+  width: 20vw;
+  max-width: 300px;
+  max-height: 300px;
   border-radius: 8px;
   display: flex;
   justify-content: center;
@@ -246,6 +260,8 @@ const sendToApi = async () => {
   overflow: visible;
   transform-origin: 0 0;
   position: absolute;
+  touch-action: none;
+  user-select: none;
 }
 
 .controls {
@@ -255,5 +271,12 @@ const sendToApi = async () => {
 input[type='range'] {
   width: 100%;
   margin: 10px 0;
+}
+
+@media (max-width: 800px) {
+  .drop-zone {
+    width: 70vw;
+    font-size: 1em;
+  }
 }
 </style>

@@ -1,8 +1,9 @@
 <script setup>
 import { useSessionStore } from '@/stores/SessionStore'
 import { computed } from 'vue'
-import BorderButton from './BorderButton.vue'
+import BorderButton from '../Common/Buttons/BorderButton.vue'
 import GeneralOverlay from './GeneralOverlay.vue'
+import apiClient from '@/api/apiClient'
 
 const emit = defineEmits(['close'])
 const sessionStore = useSessionStore()
@@ -11,13 +12,9 @@ const session = computed(() => sessionStore.getOpenChat)
 const sessionName = computed(() => session.value.sessionName)
 
 const leaveSession = async () => {
-  const url = 'https://127.0.0.1:8443/sessions/' + session.value.sessionId + '/leave'
-  const opts = {
-    method: 'DELETE',
-    credentials: 'include'
-  }
+  const endpoint = '/sessions/' + session.value.sessionId + '/leave'
 
-  const response = await fetch(url, opts)
+  const response = await apiClient.delete(endpoint)
 
   if (response.ok) {
     sessionStore.deleteSession(session.value)
@@ -52,5 +49,6 @@ const leaveSession = async () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
 }
 </style>

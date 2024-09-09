@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import apiClient from '@/api/apiClient'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -12,7 +13,9 @@ export const useAuthStore = defineStore('auth', {
   },
 
   actions: {
-    logOut() {
+    async logOut() {
+      await apiClient.post('/auth/logout')
+
       this.user = null
     },
 
@@ -21,20 +24,10 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async refreshTokens() {
-      try {
-        const response = await fetch('https://127.0.0.1:8443/auth/refresh', {
-          method: 'GET',
-          credentials: 'include'
-        })
-        if (response.ok) {
-          const user = await response.json()
-          this.setUser(user)
-        } else {
-          this.logOut()
-        }
-      } catch (error) {
-        console.log('An error has occured while trying to authenticate you')
-        this.logOut()
+      const response = await apiClient.post('/auth/refresh')
+      if (response.ok) {
+        const user = await response.json()
+        this.setUser(user)
       }
     }
   }

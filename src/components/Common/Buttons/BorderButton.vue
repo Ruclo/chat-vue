@@ -2,7 +2,7 @@
 
 <template>
   <div class="border">
-    <button class="btn">
+    <button class="border-btn">
       <slot></slot>
     </button>
   </div>
@@ -16,7 +16,7 @@
   display: flex;
   width: fit-content;
 }
-.btn {
+.border-btn {
   z-index: 1;
   cursor: pointer;
   padding: 0.5em;
@@ -34,6 +34,6 @@
   width: calc(100% + var(--border-width) * 2);
   background: var(--gradient);
   border-radius: 1em;
-  z-index: -1;
+  z-index: 0;
 }
 </style>

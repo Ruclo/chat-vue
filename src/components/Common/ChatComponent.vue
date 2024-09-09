@@ -36,7 +36,6 @@ watch(
     }
 
     isLoading.value = false
-
     await nextTick()
     if (messagesWrap.value != null) {
       messagesWrap.value.scrollTo(0, messagesWrap.value.scrollHeight)
@@ -55,12 +54,12 @@ watch(messageCount, async (count) => {
   const messagesArr = document.querySelectorAll('.message-container')
   const latestMessagePreSend = messagesArr[messagesArr.length - 2]
 
-  if (messagesWrap.value != null && isElementInView(messagesWrap.value, latestMessagePreSend)) {
+  if (messagesWrap.value && isElementInView(messagesWrap.value, latestMessagePreSend)) {
     messagesWrap.value.scrollTo(0, messagesWrap.value.scrollHeight)
   }
 })
 
-function debounce(func, wait) {
+function throttle(func, wait) {
   let called = false
   let lastMessageCount
 
@@ -76,13 +75,13 @@ function debounce(func, wait) {
   }
 }
 
-const debouncedFetch = debounce(messageStore.fetchMessages, 1000)
+const throttledFetch = throttle(messageStore.fetchMessages, 1000)
 
 async function handleIntersect() {
   const scrollContainer = messagesWrap.value
   const scrollHeight = scrollContainer.scrollHeight
 
-  await debouncedFetch(sessionId.value, MIN_CHAT_COUNT)
+  await throttledFetch(sessionId.value, MIN_CHAT_COUNT)
   await nextTick()
 
   const newScrollHeight = scrollContainer.scrollHeight
@@ -143,7 +142,8 @@ function isElementInView(container, element) {
 }
 
 .chat-component {
-  height: inherit;
+  flex-grow: 1;
+  overflow: auto;
 }
 
 .messages {

@@ -5,19 +5,36 @@ export function useImageCrop(container, image) {
   const isDragging = ref(false)
   const startPosition = reactive({ x: 0, y: 0 })
 
+  const getEventCoordinates = (event) => {
+    if (event.touches && event.touches.length) {
+      return { x: event.touches[0].clientX, y: event.touches[0].clientY }
+    }
+
+    return { x: event.clientX, y: event.clientY }
+  }
+
   const startCrop = (event) => {
+    event.preventDefault()
     isDragging.value = true
-    startPosition.x = event.clientX
-    startPosition.y = event.clientY
+
+    const { x, y } = getEventCoordinates(event)
+    startPosition.x = x
+    startPosition.y = y
     window.addEventListener('mousemove', moveCrop)
     window.addEventListener('mouseup', stopCrop)
+
+    window.addEventListener('touchmove', moveCrop)
+    window.addEventListener('touchend', stopCrop)
   }
 
   const moveCrop = (event) => {
-    if (!isDragging.value) return
+    event.preventDefault()
 
-    const mouseXDiff = event.clientX - startPosition.x
-    const mouseYDiff = event.clientY - startPosition.y
+    if (!isDragging.value) return
+    const { x, y } = getEventCoordinates(event)
+
+    const mouseXDiff = x - startPosition.x
+    const mouseYDiff = y - startPosition.y
 
     const containerRect = container.value.getBoundingClientRect()
     const imageRect = image.value.getBoundingClientRect()
@@ -56,13 +73,17 @@ export function useImageCrop(container, image) {
       cropPosition.y += mouseYDiff
     }
 
-    startPosition.x = event.clientX
-    startPosition.y = event.clientY
+    startPosition.x = x
+    startPosition.y = y
   }
 
-  const stopCrop = () => {
+  const stopCrop = (event) => {
+    event.preventDefault()
     window.removeEventListener('mousemove', moveCrop)
     window.removeEventListener('mouseup', stopCrop)
+    window.removeEventListener('touchmove', moveCrop)
+    window.removeEventListener('touchend', stopCrop)
+
     isDragging.value = false
   }
 
