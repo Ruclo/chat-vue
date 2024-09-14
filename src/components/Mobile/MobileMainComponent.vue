@@ -19,12 +19,9 @@ const changeOverlay = (overlayComponent) => {
 }
 
 watch(
-  () => sessionStore.isChatOpen,
-  (v) => {
-    if (!v) {
-      currentOverlay.value =
-        sessionStore.getSessionCount > 0 ? SessionBar : MobileCreateFirstSession
-    }
+  () => sessionStore.getSessionCount,
+  (count) => {
+    currentOverlay.value = count > 0 ? SessionBar : MobileCreateFirstSession
   }
 )
 </script>

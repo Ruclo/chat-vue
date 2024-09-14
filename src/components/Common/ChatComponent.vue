@@ -112,7 +112,7 @@ function isElementInView(container, element) {
         <MessageComponent
           :class="{ 'users-message': message.sender.username == authStore.getUsername }"
           v-for="message in messages"
-          :key="message.Id"
+          :key="message.clientId"
           :sender="message.sender"
           :timestamp="message.timestamp"
           :content="message.content"
@@ -126,14 +126,6 @@ function isElementInView(container, element) {
 </template>
 
 <style>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s ease;
-}
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
-}
 .chat {
   display: flex;
   justify-content: space-between;

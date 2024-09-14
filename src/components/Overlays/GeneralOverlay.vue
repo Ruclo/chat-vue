@@ -1,6 +1,6 @@
 <script setup>
 import { useResponsive } from '@/composables/useResponsive'
-import { defineProps } from 'vue'
+
 const props = defineProps({
   width: {
     type: String,

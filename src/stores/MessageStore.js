@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import apiClient from '@/api/apiClient'
+import { v4 as uuidv4 } from 'uuid'
 
 export const useMessageStore = defineStore('message', {
   state: () => ({
@@ -29,14 +30,13 @@ export const useMessageStore = defineStore('message', {
 
     updateSentMessage(updatedMessage) {
       let message = this.pendingMessages.shift()
-      message.Id = updatedMessage.Id
+      message.id = updatedMessage.id
       message.timestamp = updatedMessage.timestamp
-      this.messageIdsSet.add(message.Id)
+      this.messageIdsSet.add(message.id)
     },
 
     addMessage(messageObj) {
-      const messageId = messageObj.Id
-      console.log('id', messageId)
+      const messageId = messageObj.id
 
       if (messageId != null && this.messageIdsSet.has(messageId)) {
         return
@@ -56,16 +56,16 @@ export const useMessageStore = defineStore('message', {
     },
 
     prependMessages(messagesArray, sessionId) {
-      while (messagesArray.length > 0) {
-        let latestMessage = messagesArray[messagesArray.length - 1]
-        if (!this.messageIdsSet.has(latestMessage.Id)) {
-          break
+      for (let i = messagesArray.length - 1; i >= 0; i--) {
+        let message = messagesArray[i]
+        if (this.messageIdsSet.has(message.id)) {
+          messagesArray.splice(i, 1)
+        } else {
+          this.messageIdsSet.add(message.id)
+          message.clientId = uuidv4()
         }
-        messagesArray.pop()
       }
-      messagesArray.forEach((message) => {
-        this.messageIdsSet.add(message.Id)
-      })
+
       this.messages[sessionId] = [...messagesArray, ...(this.messages[sessionId] || [])]
     },
 

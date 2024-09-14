@@ -113,6 +113,7 @@ const handleChatOpen = async (session) => {
   cursor: pointer;
   overflow: hidden;
   max-width: 15%;
+  text-align: center;
 }
 
 @media (max-width: 800px) {

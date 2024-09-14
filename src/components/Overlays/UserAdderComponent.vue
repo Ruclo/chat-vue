@@ -1,6 +1,6 @@
 <script setup>
 import { useSessionStore } from '@/stores/SessionStore'
-import { ref, defineEmits } from 'vue'
+import { ref } from 'vue'
 import GeneralOverlay from './GeneralOverlay.vue'
 import BorderButton from '../Common/Buttons/BorderButton.vue'
 

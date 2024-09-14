@@ -4,6 +4,7 @@ import { useSessionStore } from '@/stores/SessionStore'
 import { useAuthStore } from '@/stores/AuthStore'
 import SockJS from 'sockjs-client/dist/sockjs'
 import Stomp from 'stompjs'
+import { v4 as uuidv4 } from 'uuid'
 
 const MessageTypes = {
   NEW_MESSAGE: 'chat',
@@ -79,7 +80,8 @@ export function useWebSocketConnection() {
       sessionId: sessionStore.getOpenChat.sessionId,
       timestamp: new Date().toISOString(),
       content: message,
-      id: null
+      id: null,
+      clientId: uuidv4()
     }
     stompClient.value.send('/send/session/' + messageObj.sessionId, {}, messageObj.content)
     sessionStore.updateSession(messageObj.sessionId, messageObj.timestamp)

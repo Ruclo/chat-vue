@@ -25,10 +25,12 @@ export const useAuthStore = defineStore('auth', {
 
     async refreshTokens() {
       const response = await apiClient.post('/auth/refresh')
-      if (response.ok) {
-        const user = await response.json()
-        this.setUser(user)
+
+      if (!response.ok) {
+        throw new Error('Refreshing tokens failed')
       }
+      const user = await response.json()
+      this.setUser(user)
     }
   }
 })
