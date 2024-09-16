@@ -18,10 +18,6 @@ export default defineConfig({
     }
   },
   server: {
-    https: {
-      key: fs.readFileSync(keyPath),
-      cert: fs.readFileSync(certPath)
-    },
     host: '0.0.0.0',
     port: 8000,
     proxy: {
