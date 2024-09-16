@@ -48,7 +48,7 @@ export function useWebSocketConnection() {
       return
     }
 
-    const url = import.meta.env.VITE_API_BASE_URL + '/ws'
+    const url = import.meta.env.VITE_API_WEBSOCKET_URL
     const socket = new SockJS(url)
     stompClient.value = Stomp.over(socket)
 

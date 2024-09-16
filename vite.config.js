@@ -23,6 +23,13 @@ export default defineConfig({
       cert: fs.readFileSync(certPath)
     },
     host: '0.0.0.0',
-    port: 4443
+    port: 8000,
+    proxy: {
+      '/api': {
+        target: 'https://chemical-gerladina-ruclo-f549699a.koyeb.app',
+        changeOrigin: true,
+        secure: true
+      }
+    }
   }
 })

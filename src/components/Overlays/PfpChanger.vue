@@ -157,7 +157,7 @@ const sendToApi = async () => {
     let formData = new FormData()
     formData.append('file', blob, 'profile.jpg')
 
-    const endpoint = '/api/users/profilePicture'
+    const endpoint = '/users/profilePicture'
 
     try {
       const response = await apiClient.post(endpoint, formData)
