@@ -3,5 +3,5 @@ import ImgButton from './ImgButton.vue'
 </script>
 
 <template>
-  <ImgButton imageSrc="/src/assets/edituser.svg" buttonTitle="Change profile picture" />
+  <ImgButton imageSrc="/assets/edituser.svg" buttonTitle="Change profile picture" />
 </template>

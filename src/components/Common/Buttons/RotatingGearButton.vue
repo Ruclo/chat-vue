@@ -12,7 +12,7 @@ const imageStyle = computed(() => ({
 
 <template>
   <ImgButton
-    imageSrc="/src/assets/gear.svg"
+    imageSrc="/assets/gear.svg"
     buttonTitle="Change profile picture"
     :imageStyle="imageStyle"
     @click="rotate += 180"

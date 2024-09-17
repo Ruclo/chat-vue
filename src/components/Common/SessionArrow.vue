@@ -23,7 +23,7 @@ const computedClass = computed(() => ({
 
 <template>
   <div class="arrow" :class="computedClass">
-    <img class="arrow-img" src="@/assets/arrow.svg" width="25" height="25" />
+    <img class="arrow-img" src="/assets/arrow.svg" width="25" height="25" />
   </div>
 </template>
 

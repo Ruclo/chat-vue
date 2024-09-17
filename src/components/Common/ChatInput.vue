@@ -44,7 +44,7 @@ async function handleSendMessage() {
       ></textarea>
     </div>
     <button id="chat-button" @click="handleSendMessage">
-      <img src="../../assets/send.svg" />
+      <img src="/assets/send.svg" />
     </button>
   </div>
 </template>
