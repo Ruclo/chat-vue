@@ -2,7 +2,7 @@ const BASE_URL = import.meta.env.VITE_API_URL
 
 class ApiClient {
   async request(endpoint, options = {}) {
-    const url = `${BASE_URL}${endpoint}`
+    const url = `${BASE_URL}/api${endpoint}`
     const defaultOptions = {
       credentials: 'include',
       headers: {
