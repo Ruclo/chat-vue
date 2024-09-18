@@ -119,7 +119,7 @@ const handleChatOpen = async (session) => {
 @media (max-width: 800px) {
   .session-bar {
     flex-direction: column;
-    height: 100vh;
+    height: 100svh;
     margin: 0;
   }
 
