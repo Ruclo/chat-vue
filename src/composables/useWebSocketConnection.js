@@ -51,8 +51,9 @@ export function useWebSocketConnection(disconnectCallback) {
     const url = import.meta.env.VITE_WEBSOCKET_URL
     const socket = new SockJS(url)
     stompClient.value = Stomp.over(socket)
+    stompClient.value.ws.onclose = handleDisconnect
     stompClient.value.connect(
-      { login: 'guest', passcode: 'guest' },
+      {},
       () => {
         stompClient.value.subscribe('/queue/' + authStore.getUsername, handleIncommingMessage)
         intervalId = setInterval(authStore.refreshTokens, refreshInterval)
@@ -60,16 +61,13 @@ export function useWebSocketConnection(disconnectCallback) {
       () => {
         console.error('Failed to connect to the ws')
         handleDisconnect()
-      },
-      () => {
-        console.log('You have been disconnected')
-        console.log('Trying to reconnect')
-        handleDisconnect()
       }
     )
   }
 
   const handleDisconnect = () => {
+    console.log('You have been disconnected')
+    console.log('Trying to reconnect')
     if (intervalId != null) {
       clearInterval(intervalId)
       intervalId = null
@@ -97,6 +95,10 @@ export function useWebSocketConnection(disconnectCallback) {
     sessionStore.updateSession(messageObj.sessionId, messageObj.timestamp)
     messageStore.sendMessage(messageObj)
   }
+
+  const socket = new SockJS(url)
+  stompClient.value = Stomp.over(socket)
+  console.log(stompClient.value.ws.onclose)
 
   return {
     sendWsMessage,
