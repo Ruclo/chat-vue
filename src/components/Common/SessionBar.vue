@@ -1,14 +1,17 @@
 <script setup>
 import { useSessionStore } from '@/stores/SessionStore'
 import SessionArrow from './SessionArrow.vue'
-import { computed, ref, watch, nextTick } from 'vue'
+import { computed, ref, nextTick } from 'vue'
 
 const sessionStore = useSessionStore()
 
 const itemsPerPage = computed(() => sessionStore.getSessionsPerPage)
 const currentPage = ref(0)
-const maxPage = computed(() => Math.ceil(sessionStore.getSessionCount / itemsPerPage.value) - 1)
-const fetchedAll = computed(() => sessionStore.allSessionsFetched)
+const maxPage = computed(() =>
+  sessionStore.getSessionCount == 0
+    ? 0
+    : Math.floor((sessionStore.getSessionCount - 1) / itemsPerPage.value)
+)
 
 const visibleSessions = computed(() => {
   const start = currentPage.value * itemsPerPage.value
@@ -28,12 +31,6 @@ function slidePrevious() {
 }
 
 const emit = defineEmits(['close'])
-
-watch(currentPage, async (n) => {
-  if (n == maxPage.value && !fetchedAll.value) {
-    await sessionStore.fetchSessions()
-  }
-})
 
 const handleChatOpen = async (session) => {
   sessionStore.handleChatOpen(session)

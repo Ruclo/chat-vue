@@ -21,7 +21,7 @@ async function handleCreateNewSession() {
   const response = await apiClient.post(endpoint, { name: inputValue.value })
   if (response.ok) {
     let session = await response.json()
-    sessionStore.prependSession(session)
+    sessionStore.insertSession(session)
     closeOverlay()
   }
 }

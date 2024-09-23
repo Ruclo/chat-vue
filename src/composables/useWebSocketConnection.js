@@ -1,4 +1,4 @@
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { useMessageStore } from '@/stores/MessageStore'
 import { useSessionStore } from '@/stores/SessionStore'
 import { useAuthStore } from '@/stores/AuthStore'
@@ -17,12 +17,12 @@ const refreshIntervalInMinutes = 14
 const refreshInterval = refreshIntervalInMinutes * 60000
 let intervalId = null
 
-export function useWebSocketConnection() {
+export function useWebSocketConnection(errorCallback, disconnectCallback) {
   const messageStore = useMessageStore()
   const sessionStore = useSessionStore()
   const authStore = useAuthStore()
 
-  const connect = () => {
+  const connectWs = () => {
     const handleIncommingMessage = (message) => {
       let messageJson = JSON.parse(message.body)
       const type = messageJson.headers.type
@@ -51,7 +51,6 @@ export function useWebSocketConnection() {
     const url = import.meta.env.VITE_WEBSOCKET_URL
     const socket = new SockJS(url)
     stompClient.value = Stomp.over(socket)
-
     stompClient.value.connect(
       {},
       () => {
@@ -60,21 +59,32 @@ export function useWebSocketConnection() {
       },
       () => {
         console.error('Failed to connect to the ws')
+        handleDisconnect()
+      },
+      () => {
+        console.log('You have been disconnected')
+        console.log('Trying to reconnect')
+        handleDisconnect()
       }
     )
   }
 
-  const disconnect = () => {
+  const handleDisconnect = () => {
+    if (intervalId != null) {
+      clearInterval(intervalId)
+      intervalId = null
+    }
+    setTimeout(disconnectCallback, 3000)
+  }
+
+  const disconnectWs = () => {
     if (stompClient.value) {
       stompClient.value.disconnect()
       stompClient.value = null
-      if (intervalId != null) {
-        clearInterval(intervalId)
-      }
     }
   }
 
-  const sendMessage = (message) => {
+  const sendWsMessage = (message) => {
     let messageObj = {
       sender: authStore.getUser,
       sessionId: sessionStore.getOpenChat.sessionId,
@@ -88,23 +98,9 @@ export function useWebSocketConnection() {
     messageStore.sendMessage(messageObj)
   }
 
-  if (!stompClient.value) {
-    watch(
-      () => authStore.isAuthenticated,
-      (auth) => {
-        if (auth) {
-          connect()
-        } else {
-          disconnect()
-        }
-      },
-      { immediate: true }
-    )
-  }
-
   return {
-    sendMessage,
-    connect,
-    disconnect
+    sendWsMessage,
+    connectWs,
+    disconnectWs
   }
 }

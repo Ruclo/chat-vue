@@ -69,6 +69,12 @@ export const useMessageStore = defineStore('message', {
       this.messages[sessionId] = [...messagesArray, ...(this.messages[sessionId] || [])]
     },
 
+    appendMessages(messagesArray, sessionId) {
+      this.messages[sessionId].push(
+        ...messagesArray.filter((message) => !this.messageIdsSet.has(message.id))
+      )
+    },
+
     async fetchMessages(sessionId, count) {
       let messages = this.getMessages[sessionId]
       const params = new URLSearchParams({
@@ -86,6 +92,26 @@ export const useMessageStore = defineStore('message', {
         this.moreMessagesExistMap.set(sessionId, false)
       }
       this.prependMessages(messagesArr, sessionId)
+    },
+
+    async updateOutdatedMessages() {
+      for (let sessionId in this.messages) {
+        if (this.messages[sessionId].length == 0) {
+          this.moreMessagesExistMap.set(sessionId, true)
+          continue
+        }
+
+        const params = new URLSearchParams({
+          newerThan: this.messages[sessionId][this.messages[sessionId].length - 1]
+        })
+
+        const queryStr = params.toString()
+        const endpoint = `/messages/session/${sessionId}?${queryStr}`
+
+        const response = await apiClient.get(endpoint)
+        let messagesArray = await response.json()
+        this.appendMessages(messagesArray, sessionId)
+      }
     }
   }
 })
