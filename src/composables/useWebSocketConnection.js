@@ -96,10 +96,6 @@ export function useWebSocketConnection(disconnectCallback) {
     messageStore.sendMessage(messageObj)
   }
 
-  const socket = new SockJS(url)
-  stompClient.value = Stomp.over(socket)
-  console.log(stompClient.value.ws.onclose)
-
   return {
     sendWsMessage,
     connectWs,
