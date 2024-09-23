@@ -9,7 +9,7 @@ import { useResponsive } from './composables/useResponsive'
 import { useChatApi } from './composables/useChatApi'
 
 const authStore = useAuthStore()
-const { loading } = await useChatApi()
+const { loading } = useChatApi()
 
 const { isMobile } = useResponsive()
 

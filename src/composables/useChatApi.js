@@ -4,19 +4,19 @@ import { useSessionStore } from '@/stores/SessionStore'
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useWebSocketConnection } from './useWebSocketConnection'
 
-const authStore = useAuthStore()
-const sessionStore = useSessionStore()
-const messageStore = useMessageStore()
-
-const stompClient = null
+const connected = ref(false)
 const loading = ref(true)
 let retries = 0
 const MAX_RETRIES = 3
 
-const { sendWsMessage, connectWs, disconnectWs } = useWebSocketConnection()
+export function useChatApi() {
+  const authStore = useAuthStore()
+  const sessionStore = useSessionStore()
+  const messageStore = useMessageStore()
+  const { sendWsMessage, connectWs, disconnectWs } = useWebSocketConnection()
 
-export async function useChatApi() {
   const establishConnection = async () => {
+    connected.value = false
     if (retries >= MAX_RETRIES) {
       return
     }
@@ -26,6 +26,7 @@ export async function useChatApi() {
     connectWs(establishConnection, establishConnection)
     await sessionStore.fetchSessions()
     retries = 0
+    connected.value = true
     loading.value = false
   }
 
@@ -38,10 +39,11 @@ export async function useChatApi() {
     messageStore.$reset()
   }
 
-  if (stompClient == null) {
+  if (!connected.value) {
     onMounted(async () => {
       try {
         await authStore.refreshTokens()
+        await establishConnection()
       } catch (error) {
         loading.value = false
       }
@@ -51,7 +53,6 @@ export async function useChatApi() {
       disconnect()
     })
   }
-  await establishConnection()
 
   return {
     loading,
