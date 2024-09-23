@@ -23,7 +23,7 @@ export function useChatApi() {
 
     loading.value = true
     retries++
-    connectWs(establishConnection, establishConnection)
+    connectWs(establishConnection)
     await sessionStore.fetchSessions()
     retries = 0
     connected.value = true

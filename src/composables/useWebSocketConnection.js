@@ -17,7 +17,7 @@ const refreshIntervalInMinutes = 14
 const refreshInterval = refreshIntervalInMinutes * 60000
 let intervalId = null
 
-export function useWebSocketConnection(errorCallback, disconnectCallback) {
+export function useWebSocketConnection(disconnectCallback) {
   const messageStore = useMessageStore()
   const sessionStore = useSessionStore()
   const authStore = useAuthStore()
@@ -52,7 +52,8 @@ export function useWebSocketConnection(errorCallback, disconnectCallback) {
     const socket = new SockJS(url)
     stompClient.value = Stomp.over(socket)
     stompClient.value.connect(
-      {},
+      null,
+      null,
       () => {
         stompClient.value.subscribe('/queue/' + authStore.getUsername, handleIncommingMessage)
         intervalId = setInterval(authStore.refreshTokens, refreshInterval)

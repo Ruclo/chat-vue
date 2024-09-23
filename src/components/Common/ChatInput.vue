@@ -1,10 +1,10 @@
 <script setup>
 import { ref, nextTick } from 'vue'
-import { useWebSocketConnection } from '@/composables/useWebSocketConnection'
+import { useChatApi } from '@/composables/useChatApi'
 
 const textArea = ref(null)
 const chatInput = ref('')
-const { sendMessage } = useWebSocketConnection()
+const { sendWsMessage } = useChatApi()
 
 function updateRowCount() {
   if (textArea.value == null) {
@@ -23,7 +23,7 @@ async function handleSendMessage() {
   if (chatInput.value.trim() === '') {
     return
   }
-  sendMessage(chatInput.value)
+  sendWsMessage(chatInput.value)
   chatInput.value = ''
   await nextTick()
   updateRowCount()
