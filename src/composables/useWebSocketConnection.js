@@ -52,8 +52,7 @@ export function useWebSocketConnection(disconnectCallback) {
     const socket = new SockJS(url)
     stompClient.value = Stomp.over(socket)
     stompClient.value.connect(
-      null,
-      null,
+      { login: 'guest', passcode: 'guest' },
       () => {
         stompClient.value.subscribe('/queue/' + authStore.getUsername, handleIncommingMessage)
         intervalId = setInterval(authStore.refreshTokens, refreshInterval)
