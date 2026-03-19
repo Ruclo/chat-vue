@@ -54,14 +54,12 @@ async function handleSendMessage() {
   font-family: inherit;
   resize: none;
   border: none;
-  border-radius: 1em;
-  background-image: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(83, 83, 83, 0.9)),
-    linear-gradient(135deg, #53c3c3, transparent);
-  color: white;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--ink-900);
   overflow: hidden;
-  font-size: 1.2em;
-  padding: 0.2em;
-  padding-left: 0.5em;
+  font-size: 1rem;
+  padding: 0.6em 0.7em;
   box-sizing: content-box;
   flex-grow: 1;
   z-index: 1;
@@ -71,12 +69,33 @@ async function handleSendMessage() {
   outline: none;
 }
 
+#chat-input::placeholder {
+  color: var(--ink-300);
+}
+
 #chat-button {
-  margin: 1em;
+  margin: 0.75em;
   margin-left: 0;
-  background: none;
-  border: none;
+  background: var(--ink-900);
+  border: 1px solid var(--ink-900);
+  border-radius: 999px;
   cursor: pointer;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#chat-button:hover {
+  background: var(--ink-700);
+  border-color: var(--ink-700);
+}
+
+#chat-button img {
+  filter: brightness(5);
+  width: 18px;
+  height: 18px;
 }
 
 #input-container {
@@ -84,17 +103,18 @@ async function handleSendMessage() {
   align-items: center;
   justify-content: space-between;
   bottom: 0;
-  background: #202020;
-  border-radius: 1em;
-  border: 1px solid black;
-  min-height: 4em;
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  min-height: 3.5em;
   height: fit-content;
+  box-shadow: var(--shadow-soft);
 }
 
 .border {
   --border-width: 2px;
-  --gradient: linear-gradient(90deg, rgb(0, 65, 255) 0%, rgb(127, 255, 212) 86%);
-  margin: 1em;
+  --gradient: linear-gradient(120deg, var(--accent) 0%, var(--accent-soft) 100%);
+  margin: 0.75em;
   position: relative;
   flex-grow: 1;
   display: flex;
@@ -108,7 +128,7 @@ async function handleSendMessage() {
   height: calc(100% + var(--border-width) * 2);
   width: calc(100% + var(--border-width) * 2);
   background: var(--gradient);
-  border-radius: 1em;
+  border-radius: var(--radius-md);
   z-index: 0;
 }
 </style>

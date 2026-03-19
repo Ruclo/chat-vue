@@ -38,12 +38,12 @@ const { isMobile } = useResponsive()
 
 <style scoped>
 .overlay-box-desktop {
-  background-image: linear-gradient(135deg, rgba(0, 0, 0, 1), rgba(83, 83, 83, 1)),
-    linear-gradient(135deg, #53c3c3, transparent);
+  background: var(--surface);
   z-index: 0;
-  border-radius: 1em;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  font-size: 1.5em;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  font-size: 1.2em;
+  box-shadow: var(--shadow);
 }
 .wrap {
   display: flex;
@@ -56,13 +56,13 @@ const { isMobile } = useResponsive()
   align-items: center;
 }
 .overlay-box-mobile {
-  background: var(--color-background-mute);
+  background: var(--surface);
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2em;
+  font-size: 1.4em;
 }
 
 .overlay-container {

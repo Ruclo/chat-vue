@@ -17,13 +17,13 @@
 @keyframes animate {
   0% {
     transform: translateY(0) rotate(0deg);
-    opacity: 1;
-    border-radius: 0;
+    opacity: 0.6;
+    border-radius: 12px;
   }
   100% {
     transform: translateY(-1000px) rotate(720deg);
     opacity: 0;
-    border-radius: 50%;
+    border-radius: 24px;
   }
 }
 
@@ -41,9 +41,9 @@
   list-style: none;
   width: 5%;
   height: 5%;
-  background: rgba(0, 65, 255, 0.5);
-  background: linear-gradient(90deg, rgba(0, 65, 255, 0.5) 0%, rgba(127, 255, 212, 0.5) 86%);
-  animation: animate 19s linear infinite;
+  background: rgba(160, 122, 69, 0.12);
+  border: 1px solid rgba(160, 122, 69, 0.25);
+  animation: animate 28s ease-in infinite;
 }
 
 .background li:nth-child(1) {

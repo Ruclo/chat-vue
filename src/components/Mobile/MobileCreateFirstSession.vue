@@ -11,7 +11,7 @@ const slideDirection = computed(() => {
 
 <template>
   <div class="no-sessions-display">
-    <div style="text-align: center; font-size: xx-large; color: white">You have no sessions</div>
+    <div class="empty-title">You have no sessions</div>
     <div class="btn-container">
       <CreateSessionButton @click="overlayOpen = true" />
     </div>
@@ -32,5 +32,19 @@ const slideDirection = computed(() => {
   flex-direction: column;
   justify-content: space-evenly;
   height: 100%;
+  align-items: center;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  margin: 1rem;
+  box-shadow: var(--shadow);
+}
+
+.empty-title {
+  font-size: 1.4rem;
+  color: var(--ink-900);
+  font-weight: 600;
+  font-family: var(--font-display);
 }
 </style>

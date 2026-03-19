@@ -36,7 +36,7 @@ const leaveSession = async () => {
 <style scoped>
 .message {
   margin: 1em;
-  color: white;
+  color: var(--ink-900);
   text-align: center;
   text-overflow: ellipsis;
   max-width: 400px;

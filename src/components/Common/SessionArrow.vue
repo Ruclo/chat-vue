@@ -29,11 +29,16 @@ const computedClass = computed(() => ({
 
 <style scoped>
 .arrow {
-  flex: 0 0 calc(100% / 12);
+  flex: 0 0 3.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  margin: 0.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  box-shadow: var(--shadow-soft);
 }
 
 .arrow.disabled {
@@ -48,6 +53,10 @@ const computedClass = computed(() => ({
 
 .next-arrow {
   transform: rotate(90deg);
+}
+
+.arrow-img {
+  filter: brightness(0.4);
 }
 
 @media (max-width: 800px) {

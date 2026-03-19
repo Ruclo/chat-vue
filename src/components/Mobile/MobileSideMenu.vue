@@ -42,12 +42,13 @@ const slideDirection = computed(() => (currentOverlay.value ? 'slide-right' : 's
 .side-menu {
   height: 100%;
   width: 100%;
-  background: var(--color-background-mute);
+  background: var(--surface);
+  border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   z-index: 2;
-  padding: 2px;
-  gap: 10px;
+  padding: 0.5rem;
+  gap: 12px;
 }
 
 .overlay-grid {

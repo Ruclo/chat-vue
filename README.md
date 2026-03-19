@@ -1,28 +1,27 @@
-# chatfront
+# chat-vue (Frontend)
 
-SPA chat app made with vue.js, pinia
+Vue SPA for the chat application. It talks to the backend via REST and WebSocket (SockJS + STOMP).
+
+See also:
+- Backend: `github.com/Ruclo/chat-app`
+
+## Features
+- Authenticated chat sessions
+- Live message updates via WebSockets
+- Profile image uploads (Cloudinary)
+- Mobile + desktop layouts
+
+## Config
+Environment variables (Vite):
+- `VITE_API_URL` (base URL for REST, leave empty for same-origin)
+- `VITE_WEBSOCKET_URL` (SockJS endpoint, typically `/api/ws`)
+
+In the Docker Compose proxy setup, these are set to **relative** paths so the SPA and API share the same origin.
 
 
-## Project Setup
-
-```sh
+## Dev Mode
+If you want hot reload without Compose:
+```
 npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
 npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
 ```

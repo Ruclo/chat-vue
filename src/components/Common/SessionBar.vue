@@ -63,8 +63,8 @@ const handleChatOpen = async (session) => {
 
 <style scoped>
 .selected {
-  color: aquamarine;
-  text-shadow: 0 0 5px aquamarine;
+  color: var(--ink-900);
+  text-shadow: none;
   position: relative;
 }
 
@@ -75,16 +75,18 @@ const handleChatOpen = async (session) => {
   bottom: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, rgb(0, 65, 255) 0%, rgb(127, 255, 212) 86%);
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-soft) 86%);
 }
 
 .session-bar {
   display: flex;
   width: 100%;
   margin: 0 auto;
-  height: 4em;
+  height: 4.5em;
   min-height: 25px;
-  background: var(--color-background);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-soft);
 }
 
 .sessions-wrapper {
@@ -111,6 +113,13 @@ const handleChatOpen = async (session) => {
   overflow: hidden;
   max-width: 15%;
   text-align: center;
+  color: var(--ink-500);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.session-item:hover {
+  color: var(--ink-900);
 }
 
 @media (max-width: 800px) {

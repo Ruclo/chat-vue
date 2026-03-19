@@ -20,8 +20,10 @@ const sessionStore = useSessionStore()
 <style scoped>
 .split {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 2.2fr 1fr;
   grid-auto-rows: 1fr;
-  height: calc(100vh - 4em);
+  height: calc(100vh - 4.5em);
+  gap: 1.5rem;
+  padding: 1.5rem;
 }
 </style>

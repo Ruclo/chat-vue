@@ -29,10 +29,10 @@ defineProps({
 }
 
 .img-button {
-  background: rgb(0, 65, 255);
-  background: linear-gradient(90deg, rgba(0, 65, 255, 1) 0%, rgba(127, 255, 212, 1) 86%);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 50%;
-  border: none;
+  box-shadow: var(--shadow-soft);
   overflow: hidden;
   height: 100%;
   width: 100%;
@@ -43,10 +43,14 @@ defineProps({
 
 .img-button:hover {
   cursor: pointer;
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+  transition: transform 0.2s ease;
 }
 
 img {
   max-width: 100%;
   max-height: 100%;
+  filter: brightness(0.35);
 }
 </style>

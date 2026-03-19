@@ -80,6 +80,8 @@ function closeOverlay() {
 .buttons-container {
   display: flex;
   justify-content: space-between;
+  padding: 0.5rem 0.5rem 1rem;
+  border-bottom: 1px solid var(--border);
 }
 .container {
   height: 100%;
@@ -97,16 +99,20 @@ function closeOverlay() {
 }
 
 :deep(.img-button-wrap) {
-  padding: 0.5em;
+  padding: 0.35em;
   min-height: 65px;
   height: 10vh;
 }
 
 .sidebar {
-  border-left: 1px solid black;
+  border-left: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   position: relative;
   height: 100%;
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  overflow: hidden;
 }
 </style>

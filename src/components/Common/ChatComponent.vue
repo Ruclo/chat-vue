@@ -131,27 +131,49 @@ function isElementInView(container, element) {
   justify-content: space-between;
   flex-direction: column;
   height: 100%;
+  gap: 1rem;
 }
 
 .chat-component {
   flex-grow: 1;
   overflow: auto;
+  padding: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
 }
 
 .messages {
   overflow-y: auto;
-  padding: 1em;
+  padding: 1.25rem;
+  background: var(--surface-muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
 }
 
 .messages::-webkit-scrollbar {
-  width: 3px;
+  width: 6px;
 }
 
 .messages::-webkit-scrollbar-track {
-  background: black;
+  background: transparent;
 }
 
 .messages::-webkit-scrollbar-thumb {
-  background: aquamarine;
+  background: var(--accent-soft);
+  border-radius: 999px;
+}
+
+@media (max-width: 800px) {
+  .chat-component {
+    padding: 1rem;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .messages {
+    border-radius: 0;
+  }
 }
 </style>

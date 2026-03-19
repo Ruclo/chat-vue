@@ -53,7 +53,10 @@ const register = async () => {
 <template>
   <div class="main-container" v-if="!loading">
     <div class="auth-container">
-      <h1>Auth</h1>
+      <div class="auth-header">
+        <h1>Client Access</h1>
+        <p>Secure entry for approved participants.</p>
+      </div>
 
       <LegendBorderInput legend="Username" :onSubmit="login" v-model="username" />
       <LegendBorderInput
@@ -77,18 +80,29 @@ const register = async () => {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #121212;
+  padding: 2rem;
+  background: transparent;
 }
 
 .auth-container {
   width: 100%;
-  max-width: 400px;
-  padding: 20px;
-  border-radius: 10px;
-  background-image: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(83, 83, 83, 0.9)),
-    linear-gradient(135deg, #53c3c3, transparent);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  color: white;
+  max-width: 420px;
+  padding: 28px;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  color: var(--ink-900);
   text-align: center;
+  border: 1px solid var(--border);
+}
+
+.auth-header {
+  margin-bottom: 1.5rem;
+}
+
+.auth-header p {
+  margin-top: 0.35rem;
+  font-size: 0.95rem;
+  color: var(--ink-500);
 }
 </style>

@@ -66,6 +66,7 @@ function formatTimestamp(utcTimestamp) {
   justify-content: space-between;
   opacity: 0;
   animation: fade 0.2s forwards;
+  gap: 0.5rem;
 }
 
 @keyframes fade {
@@ -87,28 +88,44 @@ function formatTimestamp(utcTimestamp) {
   width: 64px;
   height: 64px;
   border-radius: 50%;
+  border: 2px solid var(--surface);
+  box-shadow: var(--shadow-soft);
 }
 
 .message-container {
   flex-grow: 1;
-  margin: 1em;
+  margin: 0.75em 0.5em;
+  padding: 0.75em 1em;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
 }
 
 .message-header {
-  padding: 0.5em;
+  padding: 0.25em 0;
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px groove rgb(156, 156, 156);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-500);
 }
 
 .message-content {
   padding: 0.5em;
   white-space: pre-wrap;
-  color: white;
+  color: var(--ink-900);
+  font-size: 1rem;
 }
 
 .users-message .message-content {
   text-align: right;
+}
+
+.users-message .message-container {
+  border-left: 2px solid var(--accent);
+  background: #fdfaf6;
 }
 
 .message-timestamp {
@@ -124,7 +141,7 @@ function formatTimestamp(utcTimestamp) {
 
 .users-message .message-header .message-sender {
   order: 2;
-  color: aquamarine;
+  color: var(--accent-strong);
 }
 
 .message-container {

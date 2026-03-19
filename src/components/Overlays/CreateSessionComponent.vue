@@ -47,8 +47,8 @@ async function handleCreateNewSession() {
 
 <style scoped>
 .input-label {
-  color: white;
-  font-weight: bold;
+  color: var(--ink-900);
+  font-weight: 600;
   text-align: center;
 }
 
@@ -61,12 +61,12 @@ async function handleCreateNewSession() {
 }
 
 .overlay-input {
-  padding: 0.5em;
-  background: #101010;
-  border-radius: 1em;
-  color: white;
+  padding: 0.55em 0.85em;
+  background: var(--surface-muted);
+  border-radius: var(--radius-md);
+  color: var(--ink-900);
   text-align: center;
-  border: none;
+  border: 1px solid var(--border);
 }
 
 .buttons {

@@ -68,16 +68,17 @@ onMounted(async () => {
 
 <style scoped>
 .members-wrap::-webkit-scrollbar {
-  width: 3px;
+  width: 6px;
 }
 
 .members-wrap::-webkit-scrollbar-track {
-  background: black;
+  background: transparent;
   margin-bottom: 15px;
 }
 
 .members-wrap::-webkit-scrollbar-thumb {
-  background: aquamarine;
+  background: var(--accent-soft);
+  border-radius: 999px;
 }
 
 .pfp-image {
@@ -87,14 +88,18 @@ onMounted(async () => {
 }
 .member {
   display: flex;
-  color: white;
+  color: var(--ink-900);
 }
 
 .members-label {
   position: absolute;
   left: 50%;
-  color: white;
+  color: var(--ink-900);
   transform: translateX(-50%);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
 }
 .buttons {
   position: relative;
@@ -112,6 +117,7 @@ onMounted(async () => {
 
 .username {
   margin: auto 0;
+  font-weight: 600;
 }
 .members-container {
   height: 100%;
@@ -120,5 +126,6 @@ onMounted(async () => {
 
 .members-wrap {
   overflow-y: scroll;
+  padding: 0.5rem;
 }
 </style>

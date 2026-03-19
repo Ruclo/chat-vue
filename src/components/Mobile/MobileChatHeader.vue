@@ -39,10 +39,12 @@ const openSideMenu = async () => {
 .chat-header {
   flex: 0 0 5%;
   min-height: 50px;
-  background: #131313;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-shadow: var(--shadow-soft);
 }
 
 .btn {
@@ -62,8 +64,9 @@ const openSideMenu = async () => {
 }
 
 .middle {
-  color: aquamarine;
-  font-size: large;
+  color: var(--ink-900);
+  font-size: 1rem;
+  font-weight: 600;
   text-align: center;
 }
 .icon {
@@ -72,6 +75,6 @@ const openSideMenu = async () => {
 }
 
 :deep(.img-button-wrap) {
-  padding: 2px;
+  padding: 0.2em;
 }
 </style>

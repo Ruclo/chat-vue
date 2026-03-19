@@ -1,88 +1,49 @@
 <script setup></script>
 
 <template>
-  <div class="art-container">
-    <div class="tree left-tree"></div>
-    <div class="tree right-tree"></div>
+  <div class="empty-state">
+    <span class="badge">Workspace</span>
+    <h2>Select a session</h2>
+    <p>Choose a conversation from the session bar to begin the exchange.</p>
+    <div class="rule"></div>
   </div>
 </template>
 
 <style scoped>
-.split-screen {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  height: calc(100vh - 4em);
-}
-
-.chat-component {
-  height: inherit;
-}
-
-.art-container {
-  position: relative;
-  width: 100%;
+.empty-state {
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: 2rem;
 }
 
-.tree {
-  position: absolute;
-  bottom: 0;
-  width: 2px;
-  height: 60%;
-  background-color: black;
+.badge {
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: 0.7rem;
+  color: var(--accent-strong);
+  border: 1px solid var(--accent-soft);
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
 }
 
-.left-tree {
-  left: 25%;
+.empty-state p {
+  max-width: 320px;
+  color: var(--ink-500);
 }
 
-.right-tree {
-  right: 25%;
-}
-
-.tree::before,
-.tree::after {
-  content: '';
-  position: absolute;
-  width: 80px;
+.rule {
+  width: 120px;
   height: 2px;
-  background-color: black;
-}
-
-.tree::before {
-  top: 30%;
-  left: 0;
-  transform: rotate(30deg);
-}
-
-.tree::after {
-  top: 30%;
-  right: 0;
-  transform: rotate(-30deg);
-}
-
-.tree::before::before,
-.tree::after::before,
-.tree::before::after,
-.tree::after::after {
-  content: '';
-  position: absolute;
-  width: 40px;
-  height: 2px;
-  background-color: black;
-}
-
-.tree::before::before,
-.tree::after::before {
-  top: -10px;
-  left: 10px;
-  transform: rotate(-30deg);
-}
-
-.tree::before::after,
-.tree::after::after {
-  top: 10px;
-  right: 10px;
-  transform: rotate(30deg);
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  margin-top: 0.5rem;
 }
 </style>

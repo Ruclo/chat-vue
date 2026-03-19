@@ -16,13 +16,17 @@ const refreshIntervalInMinutes = 14
 
 const refreshInterval = refreshIntervalInMinutes * 60000
 let intervalId = null
+let reconnectFn = null
 
 export function useWebSocketConnection(disconnectCallback) {
   const messageStore = useMessageStore()
   const sessionStore = useSessionStore()
   const authStore = useAuthStore()
 
-  const connectWs = () => {
+  const connectWs = (onDisconnect) => {
+    if (onDisconnect) {
+      reconnectFn = onDisconnect
+    }
     const handleIncommingMessage = (message) => {
       let messageJson = JSON.parse(message.body)
       const type = messageJson.headers.type
@@ -72,7 +76,10 @@ export function useWebSocketConnection(disconnectCallback) {
       clearInterval(intervalId)
       intervalId = null
     }
-    setTimeout(disconnectCallback, 3000)
+    stompClient.value = null
+    if (reconnectFn) {
+      setTimeout(reconnectFn, 3000)
+    }
   }
 
   const disconnectWs = () => {

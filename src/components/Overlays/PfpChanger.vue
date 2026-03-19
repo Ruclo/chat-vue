@@ -222,7 +222,7 @@ const sendToApi = async () => {
 
 <style scoped>
 .profile-picture-uploader {
-  color: white;
+  color: var(--ink-900);
   margin: 0 auto;
   text-align: center;
 }
@@ -239,6 +239,8 @@ const sendToApi = async () => {
   cursor: pointer;
   overflow: hidden;
   position: relative;
+  background: var(--surface-muted);
+  border: 1px dashed var(--border-strong);
 }
 
 .drop-zone.has-image {

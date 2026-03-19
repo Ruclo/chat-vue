@@ -16,7 +16,7 @@ const props = defineProps({
 const spinnerStyle = computed(() => ({
   width: `${props.width}px`,
   height: `${props.height}px`,
-  borderTop: `${0.16 * props.width}px solid aquamarine`
+  borderTop: `${0.16 * props.width}px solid var(--accent)`
 }))
 </script>
 
